@@ -1,15 +1,17 @@
 package com.siemens;
 
+import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.siemens.Simatic_S7.WriteTaskS7;
 import com.siemens.database.User;
 import com.siemens.process.APISettingActivity;
 import com.siemens.process.LevelControlActivity;
@@ -22,6 +24,9 @@ public class MenuActivity extends AppCompatActivity implements View.OnClickListe
     private User user;
     private Intent settings;
     private APISettingActivity _apiSettings;
+    private ConnectivityManager connexStatus;
+    private NetworkInfo network;
+    private WriteTaskS7 writeS7;
 
 
 
