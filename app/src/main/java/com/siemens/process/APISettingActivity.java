@@ -31,13 +31,13 @@ public class APISettingActivity extends AppCompatActivity implements View.OnClic
 
         this.preferences = getSharedPreferences(this._apiSettings, MODE_PRIVATE);
         this._ed_IP = findViewById(R.id.ed_IP);
-        this._ed_IP.setText(this.preferences.getString("IP", "vide"));
+        this._ed_IP.setText(this.preferences.getString("IP", ""));
         this._ed_Mask = findViewById(R.id.ed_Mask);
-        this._ed_Mask.setText(this.preferences.getString("MASK", null));
+        this._ed_Mask.setText(this.preferences.getString("MASK", ""));
         this._ed_Rack = findViewById(R.id.ed_Rack);
-        this._ed_Rack.setText(this.preferences.getString("RACK", null));
+        this._ed_Rack.setText(this.preferences.getString("RACK", ""));
         this._ed_Slot = findViewById(R.id.ed_Slot);
-        this._ed_Slot.setText(this.preferences.getString("SLOT", null));
+        this._ed_Slot.setText(this.preferences.getString("SLOT", ""));
 
         this._btn_apply = findViewById(R.id.btn_apply);
         this._btn_apply.setOnClickListener(this);

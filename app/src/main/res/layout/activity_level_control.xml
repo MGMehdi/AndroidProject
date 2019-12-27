@@ -16,7 +16,19 @@
         android:id="@+id/bt_connect"/>
 
     <TextView
-        android:id="@+id/ed_test"
+        android:id="@+id/ed_test1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+    <TextView
+        android:id="@+id/ed_test2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+    <TextView
+        android:id="@+id/ed_test3"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+    <TextView
+        android:id="@+id/ed_test4"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
     <Button

@@ -1,5 +1,6 @@
 package com.siemens.Simatic_S7;
 
+import android.annotation.SuppressLint;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
@@ -24,7 +25,7 @@ public class ReadTaskS7 {
 
     private AtomicBoolean isRunning = new AtomicBoolean(false);
     private View vi_main_ui;
-    private TextView text;
+    private TextView[] text;
 
     private AutomateS7 plcS7;
     private Thread readThread;
@@ -33,9 +34,9 @@ public class ReadTaskS7 {
     private String[] param = new String[10];
     private byte[] datasPLC = new byte[512];
 
-    public ReadTaskS7(View v, TextView t) {
+    public ReadTaskS7(View v, TextView t1, TextView t2) {
         vi_main_ui = v;
-        text = t;
+        text = new TextView[] {t1, t2};
         comS7 = new S7Client();
         plcS7 = new AutomateS7();
         readThread = new Thread(plcS7);
@@ -61,20 +62,24 @@ public class ReadTaskS7 {
         Toast.makeText(vi_main_ui.getContext(),
                 "Le traitement de la tâche de fond est démarré !" + "\n"
                 , Toast.LENGTH_SHORT).show();
-        text.setText("PLC : " + String.valueOf(t));
+        //text.setText("PLC : " + String.valueOf(t));
+
     }
 
     private void downloadOnProgressUpdate(int progress) {
-
+//        text.setText("PLC : " + String.valueOf(progress));
+        text[0].setText("Output : " + String.valueOf(S7.GetWordAt(datasPLC,22)));
+        text[1].setText("Level : " + String.valueOf(S7.GetWordAt(datasPLC,16)));
     }
 
     private void downloadOnPostExecute() {
         Toast.makeText(vi_main_ui.getContext(),
                 "Le traitement de la tâche de fond est terminé !"
                 , Toast.LENGTH_LONG).show();
-        text.setText("PLC : /!\\");
+        //text.setText("PLC : /!\\");
     }
 
+    @SuppressLint("HandlerLeak")
     private Handler monHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
@@ -112,7 +117,7 @@ public class ReadTaskS7 {
                 sendPreExecuteMessage(numCPU);
                 while (isRunning.get()) {
                     if (res.equals(0)) {
-                        int retInfo = comS7.ReadArea(S7.S7AreaDB, 5, 9, 2, datasPLC);
+                        int retInfo = comS7.ReadArea(S7.S7AreaDB, 5, 0, 34, datasPLC);
                         int data = 0;
                         if (retInfo == 0) {
                             data = S7.GetWordAt(datasPLC, 0);
