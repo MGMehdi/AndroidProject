@@ -123,7 +123,6 @@ public class ReadTaskS7 {
                             data = S7.GetWordAt(datasPLC, 0);
                             sendProgressMessage(data);
                         }
-                        Log.i("Variable A.P.I. -> ", String.valueOf(data));
                     }
                     try {
                         Thread.sleep(500);

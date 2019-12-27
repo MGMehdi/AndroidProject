@@ -11,6 +11,7 @@ public class WriteTaskS7 {
     private S7Client comS7;
     private String[] parConnexion = new String[10];
     private byte[] motCommande = new byte[10];
+
     public WriteTaskS7(){
         comS7 = new S7Client();
         plcS7 = new AutomateS7();
@@ -45,14 +46,23 @@ public class WriteTaskS7 {
                 }
             }
             catch (Exception e){
-                e.printStackTrace();
+                System.out.println(e);
             }
         }
     }
     public void setWriteBool(int b, int v){
 //Masquage
-        if(v==1) motCommande[0] = (byte)(b | motCommande[0]);
-        else motCommande[0] = (byte)(~b & motCommande[0]);
+
+        if(v==1) {
+            motCommande[0] = (byte)(b | motCommande[0]);
+            System.out.println("****************************************************");
+
+        }
+        else {
+            motCommande[0] = (byte)(~b & motCommande[0]);
+            System.out.println("#####################################################");
+
+        }
     }
 }
 

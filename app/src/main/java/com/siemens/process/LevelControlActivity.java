@@ -7,6 +7,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -14,13 +15,15 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.siemens.R;
 import com.siemens.Simatic_S7.ReadTaskS7;
+import com.siemens.Simatic_S7.WriteTaskS7;
 
 public class LevelControlActivity extends AppCompatActivity implements View.OnClickListener {
 
     private ReadTaskS7 readTaskS7;
+    private WriteTaskS7 writeTaskS7;
 
-
-    private TextView test1, test2, test3, test4;
+    private TextView test1, test2;
+    private EditText et1, et2;
     private Button btest, connect;
     private SharedPreferences preferences = null;
     private String _ip, _rack, _slot;
@@ -57,10 +60,12 @@ public class LevelControlActivity extends AppCompatActivity implements View.OnCl
 
 
 
-        this.test1 = findViewById(R.id.ed_test1);
-        this.test2 = findViewById(R.id.ed_test2);
-        this.test3 = findViewById(R.id.ed_test3);
-        this.test4 = findViewById(R.id.ed_test4);
+        this.test1 = findViewById(R.id.tv_test1);
+        this.test2 = findViewById(R.id.tv_test2);
+
+        this.et1 = findViewById(R.id.ed_1);
+        this.et2 = findViewById(R.id.ed_2);
+
         this.btest = findViewById(R.id.bt_test);
         this.btest.setOnClickListener(this);
         this.connect = findViewById(R.id.bt_connect);
@@ -79,12 +84,17 @@ public class LevelControlActivity extends AppCompatActivity implements View.OnCl
             catch (InterruptedException e) {
                 e.printStackTrace();
             }
-            readTaskS7 = new ReadTaskS7(v, test1, test2, test3, test4);
+            readTaskS7 = new ReadTaskS7(v, test1, test2);
             readTaskS7.Start(this._ip, this._rack, this._slot);
+
+            writeTaskS7 = new WriteTaskS7();
+            writeTaskS7.Start(this._ip, this._rack, this._slot);
 
             break;
         case R.id.bt_test :
-
+            int a = Integer.parseInt(String.valueOf(et1.getText()));
+            int b = Integer.parseInt(String.valueOf(et2.getText()));
+            writeTaskS7.setWriteBool(a, b);
             break;
         default:
 
