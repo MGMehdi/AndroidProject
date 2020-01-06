@@ -69,7 +69,8 @@ public class ReadTaskS7 {
     private void downloadOnProgressUpdate(int progress) {
 //        text.setText("PLC : " + String.valueOf(progress));
         text[0].setText("Output : " + String.valueOf(S7.GetWordAt(datasPLC,22)));
-        text[1].setText("Level : " + String.valueOf(S7.GetWordAt(datasPLC,16)));
+        //text[1].setText("Level : " + String.valueOf(S7.GetWordAt(datasPLC,16)));
+        text[1].setText("Level : " + String.valueOf(S7.GetBitAt(datasPLC,0, 1)));
     }
 
     private void downloadOnPostExecute() {
