@@ -15,6 +15,7 @@ import com.siemens.Simatic_S7.S7;
 import com.siemens.Simatic_S7.S7Client;
 import com.siemens.Simatic_S7.S7OrderCode;
 
+import java.util.ArrayList;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 
@@ -25,7 +26,7 @@ public class ReadTaskS7 {
 
     private AtomicBoolean isRunning = new AtomicBoolean(false);
     private View vi_main_ui;
-    private TextView[] text;
+    private ArrayList<TextView> tvs;
 
     private AutomateS7 plcS7;
     private Thread readThread;
@@ -34,9 +35,9 @@ public class ReadTaskS7 {
     private String[] param = new String[10];
     private byte[] datasPLC = new byte[512];
 
-    public ReadTaskS7(View v, TextView t1, TextView t2) {
+    public ReadTaskS7(View v, ArrayList tvs) {
         vi_main_ui = v;
-        text = new TextView[] {t1, t2};
+        this.tvs = tvs;
         comS7 = new S7Client();
         plcS7 = new AutomateS7();
         readThread = new Thread(plcS7);
@@ -59,24 +60,40 @@ public class ReadTaskS7 {
     }
 
     private void downloadOnPreExecute(int t) {
-        Toast.makeText(vi_main_ui.getContext(),
-                "Le traitement de la tâche de fond est démarré !" + "\n"
-                , Toast.LENGTH_SHORT).show();
         //text.setText("PLC : " + String.valueOf(t));
 
     }
 
+    @SuppressLint("SetTextI18n")
     private void downloadOnProgressUpdate(int progress) {
-//        text.setText("PLC : " + String.valueOf(progress));
-        text[0].setText("Output : " + String.valueOf(S7.GetWordAt(datasPLC,22)));
-        //text[1].setText("Level : " + String.valueOf(S7.GetWordAt(datasPLC,16)));
-        text[1].setText("Level : " + String.valueOf(S7.GetBitAt(datasPLC,0, 1)));
+
+        if (tvs.get(0).getText().equals("Tablet packaging")){
+            //Bottles
+            tvs.get(1).setText("Bottles : " + String.valueOf(S7.GetWordAt(datasPLC, 16)));
+            //Pills
+            if (S7.GetBitAt(datasPLC, 4, 3)) tvs.get(2).setText("Demand : 5 pills");
+            else if (S7.GetBitAt(datasPLC, 4, 4)) tvs.get(2).setText("Demand : 10 pills");
+            else if (S7.GetBitAt(datasPLC, 4, 5)) tvs.get(2).setText("Demand : 15 pills");
+            else tvs.get(2).setText("Demand : none");
+            //Operation
+            if (S7.GetBitAt(datasPLC, 0, 0)) tvs.get(3).setText("In operation : Yes");
+            else tvs.get(3).setText("In operation : No");
+            //Motor
+            if (S7.GetBitAt(datasPLC, 4, 1)) tvs.get(4).setText("Motor : Work");
+            else tvs.get(4).setText("Motor : Stop");
+
+        } else if (tvs.get(0).getText().equals("Level control")){
+            if (S7.GetBitAt(datasPLC,0, 5)) { tvs.get(1).setText("Auto");}
+            else {tvs.get(1).setText("Manual");}
+
+            tvs.get(2).setText("Manual value : " + String.valueOf(S7.GetWordAt(datasPLC,20)));
+            tvs.get(3).setText("Output value : " + String.valueOf(S7.GetWordAt(datasPLC,22)));
+            tvs.get(4).setText("Setpoint value : " + String.valueOf(S7.GetWordAt(datasPLC,18)));
+            tvs.get(5).setText("Level : " + String.valueOf(S7.GetWordAt(datasPLC,16)) + "l");
+        }
     }
 
     private void downloadOnPostExecute() {
-        Toast.makeText(vi_main_ui.getContext(),
-                "Le traitement de la tâche de fond est terminé !"
-                , Toast.LENGTH_LONG).show();
         //text.setText("PLC : /!\\");
     }
 

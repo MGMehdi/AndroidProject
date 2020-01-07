@@ -3,6 +3,7 @@ package com.siemens.process;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
@@ -13,17 +14,20 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.siemens.ListActivity;
 import com.siemens.R;
 import com.siemens.Simatic_S7.ReadTaskS7;
 import com.siemens.Simatic_S7.WriteTaskS7;
+
+import java.util.ArrayList;
 
 public class LevelControlActivity extends AppCompatActivity implements View.OnClickListener {
 
     private ReadTaskS7 readTaskS7;
     private WriteTaskS7 writeTaskS7;
 
-    private TextView test1, test2;
-    private EditText et1, et2;
+    private ArrayList<TextView> tvs = new ArrayList<>();
+    private TextView tv_title, tv_manaut, tv_man, tv_setpoint, tv_level, tv_output;
     private Button btest, connect;
     private SharedPreferences preferences = null;
     private String _ip, _rack, _slot;
@@ -59,12 +63,19 @@ public class LevelControlActivity extends AppCompatActivity implements View.OnCl
         }catch (Exception e){}
 
 
+        this.tv_title = findViewById(R.id.tv_l_title);
+        this.tv_manaut = findViewById(R.id.tv_l_manaut);
+        this.tv_man = findViewById(R.id.tv_l_man);
+        this.tv_output = findViewById(R.id.tv_l_output);
+        this.tv_setpoint = findViewById(R.id.tv_l_setpoint);
+        this.tv_level = findViewById(R.id.tv_l_level);
 
-        this.test1 = findViewById(R.id.tv_test1);
-        this.test2 = findViewById(R.id.tv_test2);
-
-        this.et1 = findViewById(R.id.ed_1);
-        this.et2 = findViewById(R.id.ed_2);
+        this.tvs.add(tv_title);
+        this.tvs.add(tv_manaut);
+        this.tvs.add(tv_man);
+        this.tvs.add(tv_output);
+        this.tvs.add(tv_setpoint);
+        this.tvs.add(tv_level);
 
         this.btest = findViewById(R.id.bt_test);
         this.btest.setOnClickListener(this);
@@ -73,32 +84,50 @@ public class LevelControlActivity extends AppCompatActivity implements View.OnCl
 
     }
 
+    @Override
+    public void onBackPressed() {
+        readTaskS7.Stop();
+        writeTaskS7.Stop();
+        finish();
+    }
+
     @SuppressLint("SetTextI18n")
     @Override
     public void onClick(View v) {
     switch (v.getId()) {
         case R.id.bt_connect:
-            try {
-                Thread.sleep(1000);
-            }
-            catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-            readTaskS7 = new ReadTaskS7(v, test1, test2);
-            readTaskS7.Start(this._ip, this._rack, this._slot);
+            if (this.connect.getText().equals("CONNECT")){
+                try {
+                    Thread.sleep(1000);
+                }
+                catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                this.connect.setText("DISCONNECT");
+                readTaskS7 = new ReadTaskS7(v, this.tvs);
+                readTaskS7.Start(this._ip, this._rack, this._slot);
 
-            writeTaskS7 = new WriteTaskS7();
-            writeTaskS7.Start(this._ip, this._rack, this._slot);
+                writeTaskS7 = new WriteTaskS7();
+                writeTaskS7.Start(this._ip, this._rack, this._slot);
+            } else {
+                this.connect.setText("CONNECT");
+                this.tv_output.setText(null);
+                this.tv_manaut.setText(null);
+                this.tv_man.setText(null);
+                this.tv_level.setText(null);
+                this.tv_setpoint.setText(null);
 
-            break;
-        case R.id.bt_test :
-            int a = Integer.parseInt(String.valueOf(et1.getText()));
-            int b = Integer.parseInt(String.valueOf(et2.getText()));
-            writeTaskS7.setWriteBool(a, b);
+                readTaskS7.Stop();
+                writeTaskS7.Stop();
+            }
+
+
+
             break;
         default:
 
     }
+
     }
 
 }

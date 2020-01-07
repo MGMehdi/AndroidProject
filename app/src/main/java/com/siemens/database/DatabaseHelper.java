@@ -53,14 +53,14 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.insert(TABLE_NAME, null, contentValues);
     }
 
-    public void updateUser(User user, String _userMail) {
+    public void updateUser(User user) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
-        contentValues.put(COLUMN_MAIL, user.get_mail());
+        //contentValues.put(COLUMN_MAIL, user.get_mail());
         contentValues.put(COLUMN_NAME, user.get_name());
         contentValues.put(COLUMN_SURNAME, user.get_surname());
         contentValues.put(COLUMN_PRIVILEGE, user.get_privilege());
-        db.update(TABLE_NAME, contentValues, COLUMN_MAIL + " = " + "'" + _userMail + "'", null);
+        db.update(TABLE_NAME, contentValues, COLUMN_MAIL + " = " + "'" + user.get_mail() + "'", null);
     }
 
     public void updatePassword (User user, String _userMail) {
@@ -80,6 +80,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public Cursor getAllUser() {
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.rawQuery("SELECT * FROM " + TABLE_NAME, null);
+        return cursor;
+    }
+
+    public Cursor getAllSuperior() {
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery("SELECT * FROM " + TABLE_NAME + " WHERE " + COLUMN_PRIVILEGE + " IS " + 1 + ";", null);
         return cursor;
     }
 

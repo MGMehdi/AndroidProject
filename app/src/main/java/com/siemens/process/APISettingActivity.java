@@ -13,7 +13,7 @@ import com.siemens.R;
 
 public class APISettingActivity extends AppCompatActivity implements View.OnClickListener {
 
-    private EditText _ed_IP, _ed_Mask, _ed_Rack, _ed_Slot;
+    private EditText _ed_IP, _ed_Rack, _ed_Slot;
     private Button _btn_apply;
     private String _apiSettings;
     private SharedPreferences preferences = null;
@@ -32,8 +32,6 @@ public class APISettingActivity extends AppCompatActivity implements View.OnClic
         this.preferences = getSharedPreferences(this._apiSettings, MODE_PRIVATE);
         this._ed_IP = findViewById(R.id.ed_IP);
         this._ed_IP.setText(this.preferences.getString("IP", ""));
-        this._ed_Mask = findViewById(R.id.ed_Mask);
-        this._ed_Mask.setText(this.preferences.getString("MASK", ""));
         this._ed_Rack = findViewById(R.id.ed_Rack);
         this._ed_Rack.setText(this.preferences.getString("RACK", ""));
         this._ed_Slot = findViewById(R.id.ed_Slot);
@@ -53,7 +51,6 @@ public class APISettingActivity extends AppCompatActivity implements View.OnClic
 
                 this.preferences.edit()
                         .putString("IP", this._ed_IP.getText().toString())
-                        .putString("MASK", this._ed_Mask.getText().toString())
                         .putString("RACK", this._ed_Rack.getText().toString())
                         .putString("SLOT", this._ed_Slot.getText().toString())
                         .apply();
