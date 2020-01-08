@@ -11,6 +11,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.siemens.R;
 import com.siemens.Simatic_S7.ReadTaskS7;
@@ -26,7 +27,7 @@ public class TabletPackagingActivity extends AppCompatActivity implements View.O
     private TextView tv_title, tv_bottles, tv_pill, tv_operation, tv_motor;
     private ArrayList<TextView> tvs = new ArrayList<>();
     private EditText caca;
-    private Button connect;
+    private Button connect, send;
     private SharedPreferences preferences = null;
     private String _ip, _rack, _slot;
 
@@ -75,8 +76,10 @@ public class TabletPackagingActivity extends AppCompatActivity implements View.O
 
         this.connect = findViewById(R.id.bt_connect);
         this.connect.setOnClickListener(this);
+        this.send = findViewById(R.id.bt_test);
+        this.send.setOnClickListener(this);
+
         caca = findViewById(R.id.caca);
-        caca.setOnClickListener(this);
 
     }
 
@@ -103,8 +106,8 @@ public class TabletPackagingActivity extends AppCompatActivity implements View.O
                     readTaskS7 = new ReadTaskS7(v, tvs);
                     readTaskS7.Start(this._ip, this._rack, this._slot);
 
-                    writeTaskS7 = new WriteTaskS7();
-                    writeTaskS7.Start(this._ip, this._rack, this._slot);
+
+
                 } else {
                     this.connect.setText("CONNECT");
                     this.tv_bottles.setText(null);
@@ -117,8 +120,15 @@ public class TabletPackagingActivity extends AppCompatActivity implements View.O
                 }
                 break;
 
-            case R.id.caca:
-                break;
+            case R.id.bt_test:
+                try {
+                    Thread.sleep(1000);
+                } catch (Exception e){}
+                    writeTaskS7 = new WriteTaskS7();
+                    writeTaskS7.Start(this._ip, this._rack, this._slot);
+                    writeTaskS7.WriteByte(254);
+                    writeTaskS7.Stop();
+
 
 
             default:

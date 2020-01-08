@@ -1,7 +1,9 @@
 package com.siemens.Simatic_S7;
 
 import android.util.Log;
+import android.widget.Toast;
 
+import java.util.ArrayList;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class WriteTaskS7 {
@@ -10,7 +12,7 @@ public class WriteTaskS7 {
     private AutomateS7 plcS7;
     private S7Client comS7;
     private String[] parConnexion = new String[10];
-    private byte[] motCommande = new byte[10];
+    private byte[] motCommande = new byte[512];
 
     public WriteTaskS7(){
         comS7 = new S7Client();
@@ -39,7 +41,7 @@ public class WriteTaskS7 {
                 Integer res = comS7.ConnectTo(parConnexion[0],
                         Integer.valueOf(parConnexion[1]),Integer.valueOf(parConnexion[2]));
                 while(isRunning.get() && (res.equals(0))){
-                    Integer writePLC = comS7.WriteArea(S7.S7AreaDB,20,0,1,motCommande);
+                    Integer writePLC = comS7.WriteArea(S7.S7AreaDB,5,0,32,motCommande);
                     if(writePLC.equals(0)) {
                         Log.i("ret WRITE : ", String.valueOf(res) + "****" + String.valueOf(writePLC));
                     }
@@ -50,6 +52,8 @@ public class WriteTaskS7 {
             }
         }
     }
+
+
     public void setWriteBool(int b, int v){
 //Masquage
 
@@ -64,5 +68,54 @@ public class WriteTaskS7 {
 
         }
     }
+
+    public void WriteByte(int v){
+        String s = Integer.toBinaryString(v);
+        ArrayList<Boolean> booleans = new ArrayList<>();
+
+        for (char c:s.toCharArray()) {
+            if (c == '1') booleans.add(true);
+            else if (c =='0') booleans.add(false);
+        }
+
+        int i = booleans.size()-1;
+        for (Boolean b:booleans) {
+            System.out.print(b + " ");
+            S7.SetBitAt(motCommande, 8, i, b);
+            i--;
+        }
+            try {
+
+                Thread.sleep(2000);
+            }
+            catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+
+    }
+
+    public void WriteInt(int v){
+        S7.SetWordAt(motCommande, 18, v);
+        try {
+
+            Thread.sleep(2000);
+        }
+        catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+
+//    public void WriteBit(int v){
+//        S7.SetBitAt(motCommande, 8, 0, );
+//        try {
+//
+//            Thread.sleep(2000);
+//        }
+//        catch (InterruptedException e) {
+//            e.printStackTrace();
+//        }
+//    }
+
+
 }
 
