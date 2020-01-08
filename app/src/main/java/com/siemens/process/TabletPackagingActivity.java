@@ -128,9 +128,6 @@ public class TabletPackagingActivity extends AppCompatActivity implements View.O
                     writeTaskS7.Start(this._ip, this._rack, this._slot);
                     writeTaskS7.WriteByte(254);
                     writeTaskS7.Stop();
-
-
-
             default:
 
         }
