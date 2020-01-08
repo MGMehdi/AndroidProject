@@ -52,7 +52,6 @@ public class MenuActivity extends AppCompatActivity implements View.OnClickListe
         this._btn_level_control.setOnLongClickListener(this);
 
         Bundle userDetail = this.getIntent().getExtras();
-
         this.user = (User) userDetail.getSerializable("user");
 
 
@@ -66,14 +65,21 @@ public class MenuActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public void onClick(View v) {
+        Bundle bundle;
         switch (v.getId()) {
             case R.id.btn_tablet_packaging:
                 Intent tabletPackaging = new Intent(this, TabletPackagingActivity.class);
+                bundle = new Bundle();
+                bundle.putSerializable("user", this.user);
+                tabletPackaging.putExtras(bundle);
                 startActivity(tabletPackaging);
                 break;
 
             case R.id.btn_level_control:
                 Intent levelControl = new Intent(this, LevelControlActivity.class);
+                bundle = new Bundle();
+                bundle.putSerializable("user", this.user);
+                levelControl.putExtras(bundle);
                 startActivity(levelControl);
                 break;
 

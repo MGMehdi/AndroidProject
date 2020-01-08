@@ -44,6 +44,7 @@
                 android:layout_height="wrap_content"
                 android:paddingLeft="10dp"
                 android:paddingRight="10dp"
+                android:textCursorDrawable="@color/black"
                 android:inputType="textPersonName"
                 android:background="@drawable/border_textedit"/>
 
@@ -60,6 +61,7 @@
                 android:id="@+id/editSurname"
                 android:layout_width="match_parent"
                 android:paddingLeft="10dp"
+                android:textCursorDrawable="@color/black"
                 android:paddingRight="10dp"
                 android:layout_height="wrap_content"
                 android:inputType="textPersonName"
@@ -78,6 +80,7 @@
                 android:id="@+id/editMail"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:textCursorDrawable="@color/black"
                 android:paddingLeft="10dp"
                 android:paddingRight="10dp"
                 android:inputType="textEmailAddress"
@@ -97,6 +100,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:paddingLeft="10dp"
+                android:textCursorDrawable="@color/black"
                 android:paddingRight="10dp"
                 android:inputType="textPassword"
                 android:background="@drawable/border_textedit"/>
@@ -115,6 +119,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:paddingLeft="10dp"
+                android:textCursorDrawable="@color/black"
                 android:paddingRight="10dp"
                 android:inputType="textPassword"
                 android:background="@drawable/border_textedit"/>

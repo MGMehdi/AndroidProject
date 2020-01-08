@@ -22,6 +22,7 @@ import com.siemens.ListActivity;
 import com.siemens.R;
 import com.siemens.Simatic_S7.ReadTaskS7;
 import com.siemens.Simatic_S7.WriteTaskS7;
+import com.siemens.database.User;
 
 import java.util.ArrayList;
 
@@ -30,6 +31,9 @@ public class LevelControlActivity extends AppCompatActivity implements View.OnCl
     private ReadTaskS7 readTaskS7;
     private WriteTaskS7 writeTaskS7;
     private LinearLayout linearSend;
+    private User user;
+
+    private GridLayout gridWrite;
 
     private RadioButton rb1, rb2, rb3, rb4, rb5, rb6;
 
@@ -72,6 +76,11 @@ public class LevelControlActivity extends AppCompatActivity implements View.OnCl
         } catch (Exception e) {
         }
 
+
+        Bundle userDetail = this.getIntent().getExtras();
+        this.user = (User) userDetail.getSerializable("user");
+
+        this.gridWrite = findViewById(R.id.gridWrite);
         this.linearSend = findViewById(R.id.linearSend);
 
 
@@ -139,21 +148,20 @@ public class LevelControlActivity extends AppCompatActivity implements View.OnCl
                         e.printStackTrace();
                     }
                     this.connect.setText("DISCONNECT");
-                    for (RadioButton r : radioButtons) {
-                        r.setEnabled(true);
+                    if (this.user.get_privilege() == 1) {
+                        gridWrite.setVisibility(View.VISIBLE);
                     }
-                    this.linearSend.setVisibility(View.VISIBLE);
                     readTaskS7 = new ReadTaskS7(v, tvs);
                     readTaskS7.Start(this._ip, this._rack, this._slot);
 
 
-
                 } else {
                     this.connect.setText("CONNECT");
+                    this.writeValue.setText(null);
                     for (RadioButton r : radioButtons) {
-                        r.setEnabled(false);
+                        r.setChecked(false);
                     }
-                    this.linearSend.setVisibility(View.INVISIBLE);
+                    gridWrite.setVisibility(View.GONE);
                     this.tv_setpoint.setText(null);
                     this.tv_level.setText(null);
                     this.tv_man.setText(null);
@@ -165,30 +173,38 @@ public class LevelControlActivity extends AppCompatActivity implements View.OnCl
                 break;
 
             case R.id.bt_send:
-                int value = Integer.parseInt(this.writeValue.getText().toString());
+                Boolean checked = false;
+                for (RadioButton r : radioButtons) {
+                    if (r.isChecked()) checked = true;
+                }
+                if (this.writeValue.getText().toString().isEmpty()) {
+                    Toast.makeText(this, "Enter a value", Toast.LENGTH_SHORT).show();
+                } else if (!checked) {
+                    Toast.makeText(this, "Choose a DDB", Toast.LENGTH_SHORT).show();
+                } else if (checked){
+                    int value = Integer.parseInt(this.writeValue.getText().toString());
+                    writeTaskS7 = new WriteTaskS7();
+                    writeTaskS7.Start(this._ip, this._rack, this._slot);
+                    if (rb1.isChecked()) writeTaskS7.WriteByte(2, value);
+                    else if (rb2.isChecked()) writeTaskS7.WriteByte(3, value);
+                    else if (rb3.isChecked()) writeTaskS7.WriteInt(24, value);
+                    else if (rb4.isChecked()) writeTaskS7.WriteInt(26, value);
+                    else if (rb5.isChecked()) writeTaskS7.WriteInt(28, value);
+                    else if (rb6.isChecked()) writeTaskS7.WriteInt(30, value);
 
-
-                writeTaskS7 = new WriteTaskS7();
-                writeTaskS7.Start(this._ip, this._rack, this._slot);
-                if (rb1.isChecked()) writeTaskS7.WriteByte(2, value);
-                else if (rb2.isChecked()) writeTaskS7.WriteByte(3, value);
-                else if (rb3.isChecked()) writeTaskS7.WriteInt(24, value);
-                else if (rb4.isChecked()) writeTaskS7.WriteInt(26, value);
-                else if (rb5.isChecked()) writeTaskS7.WriteInt(28, value);
-                else if (rb6.isChecked()) writeTaskS7.WriteInt(30, value);
-
+//                    try {
+//                        Thread.sleep(1000);
+//                    } catch (Exception e) {
+//                    }
+                }
         }
 
 
-        try {
-            Thread.sleep(1000);
-        } catch (Exception e) {
-        }
+
         writeTaskS7.Stop();
 
 
     }
-
 
 
 }

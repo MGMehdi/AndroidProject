@@ -20,6 +20,7 @@ import android.widget.Toast;
 import com.siemens.R;
 import com.siemens.Simatic_S7.ReadTaskS7;
 import com.siemens.Simatic_S7.WriteTaskS7;
+import com.siemens.database.User;
 
 import java.util.ArrayList;
 
@@ -27,7 +28,9 @@ public class TabletPackagingActivity extends AppCompatActivity implements View.O
 
     private ReadTaskS7 readTaskS7;
     private WriteTaskS7 writeTaskS7;
+    private User user;
 
+    private GridLayout gridWrite;
     private TextView tv_title, tv_bottles, tv_pill, tv_operation, tv_motor;
     private LinearLayout linearSend;
     private ArrayList<TextView> tvs = new ArrayList<>();
@@ -69,6 +72,11 @@ public class TabletPackagingActivity extends AppCompatActivity implements View.O
         } catch (Exception e) {
         }
 
+
+        Bundle userDetail = this.getIntent().getExtras();
+        this.user = (User) userDetail.getSerializable("user");
+
+        this.gridWrite = findViewById(R.id.gridWrite);
         this.linearSend = findViewById(R.id.linearSend);
 
         this.tv_title = findViewById(R.id.tv_tl_title);
@@ -131,19 +139,15 @@ public class TabletPackagingActivity extends AppCompatActivity implements View.O
                         e.printStackTrace();
                     }
                     this.connect.setText("DISCONNECT");
-                    for (RadioButton r : radioButtons) {
-                        r.setEnabled(true);
+                    if (this.user.get_privilege()==1){
+                        gridWrite.setVisibility(View.VISIBLE);
                     }
-                    this.linearSend.setVisibility(View.VISIBLE);
                     readTaskS7 = new ReadTaskS7(v, tvs);
                     readTaskS7.Start(this._ip, this._rack, this._slot);
 
                 } else {
                     this.connect.setText("CONNECT");
-                    for (RadioButton r : radioButtons) {
-                        r.setEnabled(false);
-                    }
-                    this.linearSend.setVisibility(View.INVISIBLE);
+                    gridWrite.setVisibility(View.GONE);
                     this.tv_bottles.setText(null);
                     this.tv_pill.setText(null);
                     this.tv_operation.setText(null);

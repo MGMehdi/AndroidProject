@@ -53,7 +53,9 @@
 
     <GridLayout
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:id="@+id/gridWrite"
+        android:visibility="gone">
 
         <RadioGroup
             android:id="@+id/radioGroup"
@@ -65,7 +67,7 @@
                 android:id="@+id/radio1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:enabled="false"
+                android:buttonTint="@color/white"
                 android:text="DBB5"
                 android:textColor="@color/white" />
 
@@ -73,7 +75,7 @@
                 android:id="@+id/radio2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:enabled="false"
+                android:buttonTint="@color/white"
                 android:text="DBB6"
                 android:textColor="@color/white" />
 
@@ -81,7 +83,7 @@
                 android:id="@+id/radio3"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:enabled="false"
+                android:buttonTint="@color/white"
                 android:text="DBB7"
                 android:textColor="@color/white" />
 
@@ -89,7 +91,7 @@
                 android:id="@+id/radio4"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:enabled="false"
+                android:buttonTint="@color/white"
                 android:text="DBB8"
                 android:textColor="@color/white" />
 
@@ -97,7 +99,7 @@
                 android:id="@+id/radio5"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:enabled="false"
+                android:buttonTint="@color/white"
                 android:text="DBB16"
                 android:textColor="@color/white" />
         </RadioGroup>
@@ -108,16 +110,18 @@
             android:layout_height="wrap_content"
             android:layout_margin="5dp"
             android:layout_marginLeft="50dp"
-            android:orientation="vertical"
-            android:visibility="invisible">
+            android:orientation="vertical">
 
             <EditText
                 android:id="@+id/et_writeValue"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="50dp"
+                android:backgroundTint="@color/white"
+                android:textCursorDrawable="@color/white"
                 android:gravity="center_vertical"
                 android:inputType="numberSigned"
+                android:textColor="@color/white"
                 android:textAlignment="center" />
 
             <Button
