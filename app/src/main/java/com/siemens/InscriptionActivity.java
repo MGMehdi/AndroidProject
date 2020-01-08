@@ -198,7 +198,13 @@ public class InscriptionActivity extends AppCompatActivity implements View.OnCli
                 this._edName.setEnabled(true);
                 this._edSurname.setEnabled(true);
                 this._edMail.setEnabled(false);
-                this._cbPrivilege.setEnabled(true);
+
+                if (this._user.get_privilege()==1 && this._db.getAllSuperior().getCount()==1){
+                    this._cbPrivilege.setEnabled(false);
+                } else {
+                    this._cbPrivilege.setEnabled(true);
+
+                }
 
                 this._btnChangePass.setVisibility(View.VISIBLE);
                 this._btnSave.setVisibility(View.VISIBLE);
@@ -240,6 +246,7 @@ public class InscriptionActivity extends AppCompatActivity implements View.OnCli
                         this._user.set_mail(this._edMail.getText().toString());
                         this._user.set_name(this._edName.getText().toString());
                         this._user.set_surname(this._edSurname.getText().toString());
+
                         _db.updateUser(this._user);
                         Intent list = new Intent(this, ListActivity.class);
                         startActivity(list);
@@ -262,10 +269,10 @@ public class InscriptionActivity extends AppCompatActivity implements View.OnCli
             /************************************************************************************************************/
 
             case R.id.btnDelete:
-                if (this._user.get_privilege()==1){
-                    if (this._db.getAllSuperior().getCount()==1) showAlertDialog();
+                if (this._user.get_privilege() == 1) {
+                    if (this._db.getAllSuperior().getCount() == 1) showAlertDialog();
                     else showConfirmDialog(_user);
-                }else showConfirmDialog(_user);
+                } else showConfirmDialog(_user);
                 break;
             /************************************************************************************************************/
 
@@ -318,7 +325,7 @@ public class InscriptionActivity extends AppCompatActivity implements View.OnCli
                     public void onClick(DialogInterface dialog, int which) {
 
                         _db.deleteUser(user1.get_mail());
-                        if (_user.get_mail().equals(user1.get_mail())){
+                        if (_user.get_mail().equals(user1.get_mail())) {
                             Intent list = new Intent(InscriptionActivity.this, LoginActivity.class);
                             startActivity(list);
                             finish();
@@ -333,13 +340,14 @@ public class InscriptionActivity extends AppCompatActivity implements View.OnCli
                 .setIcon(android.R.drawable.ic_delete)
                 .show();
     } //END showConfirmDialog
+
     /************************************************************************************************************/
 
-    private void showAlertDialog(){
+    private void showAlertDialog() {
         new AlertDialog.Builder(this)
                 .setTitle("Alert")
                 .setMessage("You can't delete the last user or the only superior")
-                .setNeutralButton(android.R.string.ok,null)
+                .setNeutralButton(android.R.string.ok, null)
                 .setIcon(android.R.drawable.ic_dialog_alert)
                 .show();
     }
