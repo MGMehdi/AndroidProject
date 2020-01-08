@@ -8,7 +8,11 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.GridLayout;
+import android.widget.LinearLayout;
+import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -25,13 +29,18 @@ public class LevelControlActivity extends AppCompatActivity implements View.OnCl
 
     private ReadTaskS7 readTaskS7;
     private WriteTaskS7 writeTaskS7;
+    private LinearLayout linearSend;
+
+    private RadioButton rb1, rb2, rb3, rb4, rb5, rb6;
 
     private ArrayList<TextView> tvs = new ArrayList<>();
     private TextView tv_title, tv_manaut, tv_man, tv_setpoint, tv_level, tv_output;
-    private Button btest, connect;
+    private Button send, connect;
+    private EditText writeValue;
+    private ArrayList<RadioButton> radioButtons = new ArrayList<>();
+
     private SharedPreferences preferences = null;
     private String _ip, _rack, _slot;
-
 
 
     @Override
@@ -52,15 +61,18 @@ public class LevelControlActivity extends AppCompatActivity implements View.OnCl
                         .setTitle("No configuration found")
                         .setMessage("Please configure first this API. Long press on button to edit")
                         .setCancelable(false)
-                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener () {
+                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 finish();
                             }
-                }).show();
+                        }).show();
             }
 
-        }catch (Exception e){}
+        } catch (Exception e) {
+        }
+
+        this.linearSend = findViewById(R.id.linearSend);
 
 
         this.tv_title = findViewById(R.id.tv_l_title);
@@ -77,58 +89,107 @@ public class LevelControlActivity extends AppCompatActivity implements View.OnCl
         this.tvs.add(tv_setpoint);
         this.tvs.add(tv_level);
 
-        this.btest = findViewById(R.id.bt_test);
-        this.btest.setOnClickListener(this);
+        this.writeValue = findViewById(R.id.et_writeValue);
+
+        this.rb1 = findViewById(R.id.radio1);
+        this.rb2 = findViewById(R.id.radio2);
+        this.rb3 = findViewById(R.id.radio3);
+        this.rb4 = findViewById(R.id.radio4);
+        this.rb5 = findViewById(R.id.radio5);
+        this.rb6 = findViewById(R.id.radio6);
+
+
+        radioButtons.add(rb1);
+        radioButtons.add(rb2);
+        radioButtons.add(rb3);
+        radioButtons.add(rb4);
+        radioButtons.add(rb5);
+        radioButtons.add(rb6);
+
+        this.send = findViewById(R.id.bt_send);
+        this.send.setOnClickListener(this);
         this.connect = findViewById(R.id.bt_connect);
         this.connect.setOnClickListener(this);
+
+        writeTaskS7 = new WriteTaskS7();
 
     }
 
     @Override
     public void onBackPressed() {
-        readTaskS7.Stop();
-        writeTaskS7.Stop();
-        finish();
+        if (this.connect.getText().equals("CONNECT")) {
+            finish();
+        } else {
+            readTaskS7.Stop();
+            writeTaskS7.Stop();
+            finish();
+        }
+
     }
 
     @SuppressLint("SetTextI18n")
     @Override
     public void onClick(View v) {
-    switch (v.getId()) {
-        case R.id.bt_connect:
-            if (this.connect.getText().equals("CONNECT")){
-                try {
-                    Thread.sleep(1000);
+        switch (v.getId()) {
+            case R.id.bt_connect:
+                if (this.connect.getText().equals("CONNECT")) {
+                    try {
+                        Thread.sleep(1000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    this.connect.setText("DISCONNECT");
+                    for (RadioButton r : radioButtons) {
+                        r.setEnabled(true);
+                    }
+                    this.linearSend.setVisibility(View.VISIBLE);
+                    readTaskS7 = new ReadTaskS7(v, tvs);
+                    readTaskS7.Start(this._ip, this._rack, this._slot);
+
+
+
+                } else {
+                    this.connect.setText("CONNECT");
+                    for (RadioButton r : radioButtons) {
+                        r.setEnabled(false);
+                    }
+                    this.linearSend.setVisibility(View.INVISIBLE);
+                    this.tv_setpoint.setText(null);
+                    this.tv_level.setText(null);
+                    this.tv_man.setText(null);
+                    this.tv_output.setText(null);
+                    this.tv_manaut.setText(null);
+
+                    readTaskS7.Stop();
                 }
-                catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-                this.connect.setText("DISCONNECT");
-                readTaskS7 = new ReadTaskS7(v, this.tvs);
-                readTaskS7.Start(this._ip, this._rack, this._slot);
+                break;
+
+            case R.id.bt_send:
+                int value = Integer.parseInt(this.writeValue.getText().toString());
+
 
                 writeTaskS7 = new WriteTaskS7();
                 writeTaskS7.Start(this._ip, this._rack, this._slot);
-            } else {
-                this.connect.setText("CONNECT");
-                this.tv_output.setText(null);
-                this.tv_manaut.setText(null);
-                this.tv_man.setText(null);
-                this.tv_level.setText(null);
-                this.tv_setpoint.setText(null);
+                if (rb1.isChecked()) writeTaskS7.WriteByte(2, value);
+                else if (rb2.isChecked()) writeTaskS7.WriteByte(3, value);
+                else if (rb3.isChecked()) writeTaskS7.WriteInt(24, value);
+                else if (rb4.isChecked()) writeTaskS7.WriteInt(26, value);
+                else if (rb5.isChecked()) writeTaskS7.WriteInt(28, value);
+                else if (rb6.isChecked()) writeTaskS7.WriteInt(30, value);
 
-                readTaskS7.Stop();
-                writeTaskS7.Stop();
-            }
+        }
 
 
+        try {
+            Thread.sleep(1000);
+        } catch (Exception e) {
+        }
+        writeTaskS7.Stop();
 
-            break;
-        default:
-
-    }
 
     }
+
+
 
 }
 

@@ -69,7 +69,7 @@ public class WriteTaskS7 {
         }
     }
 
-    public void WriteByte(int v){
+    public void WriteByte(int p, int v){
         String s = Integer.toBinaryString(v);
         ArrayList<Boolean> booleans = new ArrayList<>();
 
@@ -81,12 +81,12 @@ public class WriteTaskS7 {
         int i = booleans.size()-1;
         for (Boolean b:booleans) {
             System.out.print(b + " ");
-            S7.SetBitAt(motCommande, 8, i, b);
+            S7.SetBitAt(motCommande, p, i, b);
             i--;
         }
             try {
 
-                Thread.sleep(2000);
+                Thread.sleep(500);
             }
             catch (InterruptedException e) {
                 e.printStackTrace();
@@ -94,28 +94,16 @@ public class WriteTaskS7 {
 
     }
 
-    public void WriteInt(int v){
-        S7.SetWordAt(motCommande, 18, v);
+    public void WriteInt(int p, int v){
+        S7.SetWordAt(motCommande, p, v);
         try {
 
-            Thread.sleep(2000);
+            Thread.sleep(500);
         }
         catch (InterruptedException e) {
             e.printStackTrace();
         }
     }
-
-//    public void WriteBit(int v){
-//        S7.SetBitAt(motCommande, 8, 0, );
-//        try {
-//
-//            Thread.sleep(2000);
-//        }
-//        catch (InterruptedException e) {
-//            e.printStackTrace();
-//        }
-//    }
-
 
 }
 
