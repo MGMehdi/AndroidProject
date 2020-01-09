@@ -103,7 +103,6 @@ public class TabletPackagingActivity extends AppCompatActivity implements View.O
         this.send = findViewById(R.id.bt_send);
         this.send.setOnClickListener(this);
 
-        writeTaskS7 = new WriteTaskS7();
     }
 
     @Override
@@ -148,6 +147,7 @@ public class TabletPackagingActivity extends AppCompatActivity implements View.O
 
             case R.id.bt_send:
                 int value = Integer.parseInt(this.writeValue.getText().toString());
+                writeTaskS7 = new WriteTaskS7();
                 writeTaskS7.Start(this._ip, this._rack, this._slot);
                 if (rb1.isChecked()) writeTaskS7.WriteByte(5, value);
                 else if (rb2.isChecked()) writeTaskS7.WriteByte(6, value);

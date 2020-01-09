@@ -63,7 +63,8 @@ public class LevelControlActivity extends AppCompatActivity implements View.OnCl
                             }
                         }).show();
             }
-        } catch (Exception e) {}
+        } catch (Exception e) {
+        }
 
         Bundle userDetail = this.getIntent().getExtras();
         this.user = (User) userDetail.getSerializable("user");
@@ -105,7 +106,6 @@ public class LevelControlActivity extends AppCompatActivity implements View.OnCl
         radioButtons.add(rb5);
         radioButtons.add(rb6);
 
-        writeTaskS7 = new WriteTaskS7();
     }
 
     @Override
@@ -154,6 +154,7 @@ public class LevelControlActivity extends AppCompatActivity implements View.OnCl
                 break;
 
             case R.id.bt_send:
+                writeTaskS7 = new WriteTaskS7();
                 Boolean checked = false;
                 for (RadioButton r : radioButtons) {
                     if (r.isChecked()) checked = true;
@@ -162,18 +163,40 @@ public class LevelControlActivity extends AppCompatActivity implements View.OnCl
                     Toast.makeText(this, "Enter a value", Toast.LENGTH_SHORT).show();
                 } else if (!checked) {
                     Toast.makeText(this, "Choose a DDB", Toast.LENGTH_SHORT).show();
-                } else if (checked){
+                } else if (checked) {
                     int value = Integer.parseInt(this.writeValue.getText().toString());
-                    writeTaskS7.Start(this._ip, this._rack, this._slot);
-                    if (rb1.isChecked()) writeTaskS7.WriteByte(2, value);
-                    else if (rb2.isChecked()) writeTaskS7.WriteByte(3, value);
-                    else if (rb3.isChecked()) writeTaskS7.WriteInt(24, value);
-                    else if (rb4.isChecked()) writeTaskS7.WriteInt(26, value);
-                    else if (rb5.isChecked()) writeTaskS7.WriteInt(28, value);
-                    else if (rb6.isChecked()) writeTaskS7.WriteInt(30, value);
+
+                    if (rb1.isChecked()) {
+                        writeTaskS7.Start(this._ip, this._rack, this._slot);
+                        writeTaskS7.WriteByte(2, value);
+                        //writeTaskS7.Stop();
+                    } else if (rb2.isChecked()) {
+                        writeTaskS7.Start(this._ip, this._rack, this._slot);
+                        writeTaskS7.WriteByte(3, value);
+                        //writeTaskS7.Stop();
+                    } else if (rb3.isChecked()) {
+                        writeTaskS7.Start(this._ip, this._rack, this._slot);
+                        writeTaskS7.WriteInt(24, value);
+                        //writeTaskS7.Stop();
+                    } else if (rb4.isChecked()) {
+                        writeTaskS7.Start(this._ip, this._rack, this._slot);
+                        writeTaskS7.WriteInt(26, value);
+                        //writeTaskS7.Stop();
+                    } else if (rb5.isChecked()) {
+                        writeTaskS7.Start(this._ip, this._rack, this._slot);
+                        writeTaskS7.WriteInt(28, value);
+                        //writeTaskS7.Stop();
+                    } else if (rb6.isChecked()) {
+                        writeTaskS7.Start(this._ip, this._rack, this._slot);
+                        writeTaskS7.WriteInt(30, value);
+                        //writeTaskS7.Stop();
+                    }
+                    writeTaskS7.Stop();
                 }
+
+                break;
         }
-        writeTaskS7.Stop();
+
     }
 
 

@@ -66,9 +66,8 @@ public class ReadTaskS7 {
 
     @SuppressLint("SetTextI18n")
     private void downloadOnProgressUpdate(int progress) {
-
         if (tvs.get(0).getText().equals("Tablet packaging")){
-            System.out.println(S7.GetBitAt(datasPLC, 8, 3) + " " +S7.GetBitAt(datasPLC, 8, 2) + " " +S7.GetBitAt(datasPLC, 8, 1) + " " +S7.GetBitAt(datasPLC, 8, 0));
+            //System.out.println(S7.GetBitAt(datasPLC, 8, 3) + " " +S7.GetBitAt(datasPLC, 8, 2) + " " +S7.GetBitAt(datasPLC, 8, 1) + " " +S7.GetBitAt(datasPLC, 8, 0));
             //Bottles
             tvs.get(1).setText("Bottles : " + String.valueOf(S7.GetWordAt(datasPLC, 16)));
             //Pills
