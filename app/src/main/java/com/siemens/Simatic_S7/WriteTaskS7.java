@@ -82,7 +82,7 @@ public class WriteTaskS7 {
     public void WriteInt(int p, int v) {
         S7.SetWordAt(motCommande, p, v);
         try {
-            Thread.sleep(500);
+            Thread.sleep(1000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }

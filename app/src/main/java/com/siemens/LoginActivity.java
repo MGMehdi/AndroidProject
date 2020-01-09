@@ -35,8 +35,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         this._btnLogin = findViewById(R.id.btn_login);
         this._btnLogin.setOnClickListener(this);
 
-        Toast.makeText(this, "User " + this._db.getAllUser().getCount(), Toast.LENGTH_SHORT).show();
-
         if (this._db.getAllUser().getCount() == 0) {
             FirstStart();
         }

@@ -155,10 +155,6 @@ public class TabletPackagingActivity extends AppCompatActivity implements View.O
                 else if (rb4.isChecked()) writeTaskS7.WriteByte(8, value);
                 else if (rb5.isChecked()) writeTaskS7.WriteInt(18, value);
 
-                try {
-                    Thread.sleep(1000);
-                } catch (Exception e) {
-                }
                 writeTaskS7.Stop();
             default:
         }
