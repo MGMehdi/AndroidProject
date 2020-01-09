@@ -129,7 +129,7 @@
                 android:text="Is a super user"
                 android:textColor="@color/white"
                 android:buttonTint="@color/white"
-                android:checked="true"/>
+                android:checked="false"/>
 
             <Button
                 android:id="@+id/btnSignUp"

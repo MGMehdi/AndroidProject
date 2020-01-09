@@ -25,6 +25,7 @@ public class InscriptionActivity extends AppCompatActivity implements View.OnCli
     private boolean _isUserDetail = false;
     private boolean _isChangingPassword = false;
     private boolean _whatCheck[] = {false, false}; //0=userDate, 1=userPass
+    private boolean ismodify = false;
     private Button _btnSignUp;
     private Button _btnChangePass;
     private Button _btnModify;
@@ -84,6 +85,7 @@ public class InscriptionActivity extends AppCompatActivity implements View.OnCli
 
         if (_isFirstStart) {
             this._cbPrivilege.setVisibility(View.GONE);
+            this._cbPrivilege.setChecked(true);
         } else {
             this._cbPrivilege.setVisibility(View.VISIBLE);
         }
@@ -176,18 +178,27 @@ public class InscriptionActivity extends AppCompatActivity implements View.OnCli
                             this._user.set_privilege(0);
                             _db.addUser(this._user);
                         }
-                        Intent menu = new Intent(this, MenuActivity.class);
-                        Bundle bundle = new Bundle();
-                        bundle.putSerializable("user", this._user);
-                        menu.putExtras(bundle);
-                        startActivity(menu);
-                        finish();
+                        if (_isFirstStart) {
+                            Intent menu = new Intent(this, MenuActivity.class);
+                            Bundle bundle = new Bundle();
+                            bundle.putSerializable("user", this._user);
+                            menu.putExtras(bundle);
+                            startActivity(menu);
+                            finish();
+                        } else {
+                            Toast.makeText(this, "User created", Toast.LENGTH_SHORT).show();
+                            Intent list = new Intent(this, ListActivity.class);
+                            startActivity(list);
+                            finish();
+                        }
+
                     }
                 }
                 break;
             /************************************************************************************************************/
 
             case R.id.btnModify:
+                this.ismodify = true;
                 this._edName.setEnabled(true);
                 this._edSurname.setEnabled(true);
                 this._edMail.setEnabled(false);
@@ -281,6 +292,9 @@ public class InscriptionActivity extends AppCompatActivity implements View.OnCli
                 Toast.makeText(getApplicationContext(), "Please enter a surname", Toast.LENGTH_SHORT).show();
             } else if (this._edMail.getText().toString().isEmpty()) {
                 Toast.makeText(getApplicationContext(), "Please enter an email address", Toast.LENGTH_SHORT).show();
+            }
+            if (!this.ismodify && this._db.getOneUser(this._edMail.getText().toString()).getCount() == 1) {
+                Toast.makeText(getApplicationContext(), "Mail address already used", Toast.LENGTH_SHORT).show();
             } else {
                 if (_isFirstStart) {
                     return true;
@@ -308,14 +322,17 @@ public class InscriptionActivity extends AppCompatActivity implements View.OnCli
     /************************************************************************************************************/
 
     private void showConfirmDialog(final User user1) {
+        System.out.println(_user.get_mail() + " " + user1.get_mail());
+
         new AlertDialog.Builder(this)
                 .setTitle("Delete user")
                 .setMessage("Are you sure you want to delete " + user1.get_surname() + " " + user1.get_name())
                 .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
+
                         _db.deleteUser(user1);
-                        if (_user.get_mail().equals(user1.get_mail())) {
+                        if (user1.get_privilege() == 1) {
                             Intent list = new Intent(InscriptionActivity.this, LoginActivity.class);
                             startActivity(list);
                             finish();
