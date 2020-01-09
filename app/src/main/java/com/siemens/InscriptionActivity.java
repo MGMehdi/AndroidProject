@@ -336,7 +336,7 @@ public class InscriptionActivity extends AppCompatActivity implements View.OnCli
     private void showAlertDialog() {
         new AlertDialog.Builder(this)
                 .setTitle("Alert")
-                .setMessage("You can't delete the last user or the only superior")
+                .setMessage("You can't delete the last superior")
                 .setNeutralButton(android.R.string.ok, null)
                 .setIcon(android.R.drawable.ic_dialog_alert)
                 .show();

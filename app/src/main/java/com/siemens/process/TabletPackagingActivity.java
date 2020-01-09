@@ -10,6 +10,7 @@ import android.widget.EditText;
 import android.widget.GridLayout;
 import android.widget.RadioButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -107,7 +108,7 @@ public class TabletPackagingActivity extends AppCompatActivity implements View.O
 
     @Override
     public void onBackPressed() {
-        if (this.connect.getText().equals("CONNECT")) {
+        if (this.connect.getText().toString().equals("CONNECT")) {
             finish();
         } else {
             readTaskS7.Stop();
@@ -146,16 +147,22 @@ public class TabletPackagingActivity extends AppCompatActivity implements View.O
                 break;
 
             case R.id.bt_send:
-                int value = Integer.parseInt(this.writeValue.getText().toString());
-                writeTaskS7 = new WriteTaskS7();
-                writeTaskS7.Start(this._ip, this._rack, this._slot);
-                if (rb1.isChecked()) writeTaskS7.WriteByte(5, value);
-                else if (rb2.isChecked()) writeTaskS7.WriteByte(6, value);
-                else if (rb3.isChecked()) writeTaskS7.WriteByte(7, value);
-                else if (rb4.isChecked()) writeTaskS7.WriteByte(8, value);
-                else if (rb5.isChecked()) writeTaskS7.WriteInt(18, value);
+                Boolean checked = false;
+                for (RadioButton r : radioButtons) if (r.isChecked()) checked = true;
+                if (this.writeValue.getText().toString().isEmpty()) Toast.makeText(this, "Enter a value", Toast.LENGTH_SHORT).show();
+                else if (!checked) Toast.makeText(this, "Choose a DDB", Toast.LENGTH_SHORT).show();
+                else if (checked) {
+                    writeTaskS7 = new WriteTaskS7();
+                    writeTaskS7.Start(this._ip, this._rack, this._slot);
+                    int value = Integer.parseInt(this.writeValue.getText().toString());
+                    if (rb1.isChecked()) writeTaskS7.WriteByte(5, value);
+                    else if (rb2.isChecked()) writeTaskS7.WriteByte(6, value);
+                    else if (rb3.isChecked()) writeTaskS7.WriteByte(7, value);
+                    else if (rb4.isChecked()) writeTaskS7.WriteByte(8, value);
+                    else if (rb5.isChecked()) writeTaskS7.WriteInt(18, value);
+                    writeTaskS7.Stop();
+                }
 
-                writeTaskS7.Stop();
             default:
         }
     }
