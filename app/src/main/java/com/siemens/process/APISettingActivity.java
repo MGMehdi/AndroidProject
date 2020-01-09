@@ -21,13 +21,10 @@ public class APISettingActivity extends AppCompatActivity implements View.OnClic
     private String _apiSettings;
     private SharedPreferences preferences = null;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_apisetting);
-
-
 
         Bundle intent = this.getIntent().getExtras();
         this._apiSettings = intent.getString("api");
@@ -42,17 +39,14 @@ public class APISettingActivity extends AppCompatActivity implements View.OnClic
 
         this._btn_apply = findViewById(R.id.btn_apply);
         this._btn_apply.setOnClickListener(this);
-
-
-
     }
 
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.btn_apply:
-                if (Patterns.IP_ADDRESS.matcher(this._ed_IP.getText().toString()).matches()){
-                    if (this._ed_Rack.getText().toString().isEmpty() || this._ed_Slot.getText().toString().isEmpty()){
+                if (Patterns.IP_ADDRESS.matcher(this._ed_IP.getText().toString()).matches()) {
+                    if (this._ed_Rack.getText().toString().isEmpty() || this._ed_Slot.getText().toString().isEmpty()) {
                         Toast.makeText(this, "Invalid rack or slot", Toast.LENGTH_SHORT).show();
                     } else {
                         this.preferences.edit()
@@ -62,11 +56,7 @@ public class APISettingActivity extends AppCompatActivity implements View.OnClic
                                 .apply();
                         finish();
                     }
-
-                } else {
-                    Toast.makeText(this, "Invalid IP", Toast.LENGTH_SHORT).show();
-                }
-
+                } else Toast.makeText(this, "Invalid IP", Toast.LENGTH_SHORT).show();
         }
     }
 }

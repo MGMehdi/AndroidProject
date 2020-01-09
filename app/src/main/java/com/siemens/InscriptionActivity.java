@@ -17,8 +17,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.siemens.database.DatabaseHelper;
 import com.siemens.database.User;
 
-import java.util.ArrayList;
-
 public class InscriptionActivity extends AppCompatActivity implements View.OnClickListener {
 
     private EditText _edName, _edSurname, _edMail, _edPassword, _edPasswordConfirm;
@@ -44,7 +42,6 @@ public class InscriptionActivity extends AppCompatActivity implements View.OnCli
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_inscription);
 
-        // BINDING
         this._tvMail = findViewById(R.id.tv_mail);
         this._tvName = findViewById(R.id.tv_name);
         this._tvSurname = findViewById(R.id.tv_surname);
@@ -93,8 +90,6 @@ public class InscriptionActivity extends AppCompatActivity implements View.OnCli
 
         // Want to see detail of an user
         if (_isUserDetail) {
-            //Set user
-            //this._user = new User();
             Cursor cursor = _db.getOneUser(this._userMail);
             if (cursor.moveToFirst()) {
                 this._user.set_mail(cursor.getString(0));
@@ -136,7 +131,7 @@ public class InscriptionActivity extends AppCompatActivity implements View.OnCli
     @Override
     public void onBackPressed() {
         if (_isFirstStart) {
-
+            Toast.makeText(this, "Create an user first", Toast.LENGTH_SHORT).show();
         } else {
             Intent list = new Intent(this, ListActivity.class);
             startActivity(list);
@@ -149,7 +144,6 @@ public class InscriptionActivity extends AppCompatActivity implements View.OnCli
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-
             case R.id.cbPrivilege:
                 if (this._cbPrivilege.isChecked()) {
                     this._user.set_privilege(1);
@@ -168,7 +162,6 @@ public class InscriptionActivity extends AppCompatActivity implements View.OnCli
                     if (checkUserData(this._whatCheck)) {
                         DatabaseHelper _db = new DatabaseHelper(this);
                         if (this._isFirstStart) {
-                            //this._user = new User(this._edMail.getText().toString(), this._edName.getText().toString(), this._edSurname.getText().toString(), this._edPassword.getText().toString(), 1);
                             this._user.set_name(this._edName.getText().toString());
                             this._user.set_surname(this._edSurname.getText().toString());
                             this._user.set_mail(this._edMail.getText().toString());
@@ -199,11 +192,10 @@ public class InscriptionActivity extends AppCompatActivity implements View.OnCli
                 this._edSurname.setEnabled(true);
                 this._edMail.setEnabled(false);
 
-                if (this._user.get_privilege()==1 && this._db.getAllSuperior().getCount()==1){
+                if (this._user.get_privilege() == 1 && this._db.getAllSuperior().getCount() == 1) {
                     this._cbPrivilege.setEnabled(false);
                 } else {
                     this._cbPrivilege.setEnabled(true);
-
                 }
 
                 this._btnChangePass.setVisibility(View.VISIBLE);
@@ -220,7 +212,6 @@ public class InscriptionActivity extends AppCompatActivity implements View.OnCli
                 this._tvMail.setVisibility(View.GONE);
                 this._tvName.setVisibility(View.GONE);
                 this._tvSurname.setVisibility(View.GONE);
-
                 this._cbPrivilege.setVisibility(View.GONE);
 
                 this._edMail.setVisibility(View.GONE);
@@ -323,8 +314,7 @@ public class InscriptionActivity extends AppCompatActivity implements View.OnCli
                 .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-
-                        _db.deleteUser(user1.get_mail());
+                        _db.deleteUser(user1);
                         if (_user.get_mail().equals(user1.get_mail())) {
                             Intent list = new Intent(InscriptionActivity.this, LoginActivity.class);
                             startActivity(list);

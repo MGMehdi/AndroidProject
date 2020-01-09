@@ -1,6 +1,5 @@
 package com.siemens;
 
-import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -28,13 +27,10 @@ public class MenuActivity extends AppCompatActivity implements View.OnClickListe
     private NetworkInfo network;
     private WriteTaskS7 writeS7;
 
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_menu);
-
 
         this._tv_welcome = findViewById(R.id.tv_welcome);
         this._btn_tablet_packaging = findViewById(R.id.btn_tablet_packaging);
@@ -42,18 +38,15 @@ public class MenuActivity extends AppCompatActivity implements View.OnClickListe
         this._btn_management = findViewById(R.id.btn_management);
         this._btn_logout = findViewById(R.id.btn_log_out);
 
-
         this._btn_tablet_packaging.setOnClickListener(this);
         this._btn_level_control.setOnClickListener(this);
         this._btn_management.setOnClickListener(this);
         this._btn_logout.setOnClickListener(this);
-
         this._btn_tablet_packaging.setOnLongClickListener(this);
         this._btn_level_control.setOnLongClickListener(this);
 
         Bundle userDetail = this.getIntent().getExtras();
         this.user = (User) userDetail.getSerializable("user");
-
 
         this._tv_welcome.setText("Welcome " + this.user.get_name() + " " + this.user.get_surname());
 
@@ -110,8 +103,6 @@ public class MenuActivity extends AppCompatActivity implements View.OnClickListe
                 startActivity(settings);
                 break;
         }
-
         return false;
-
     }
 }

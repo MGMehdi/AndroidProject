@@ -55,21 +55,6 @@ public class WriteTaskS7 {
         }
     }
 
-
-    public void setWriteBool(int b, int v) {
-//Masquage
-
-        if (v == 1) {
-            motCommande[0] = (byte) (b | motCommande[0]);
-            System.out.println("****************************************************");
-
-        } else {
-            motCommande[0] = (byte) (~b & motCommande[0]);
-            System.out.println("#####################################################");
-
-        }
-    }
-
     public void WriteByte(int p, int v) {
         String s = Integer.toBinaryString(v);
         ArrayList<Boolean> booleans = new ArrayList<>();
@@ -79,6 +64,7 @@ public class WriteTaskS7 {
             else if (c == '0') booleans.add(false);
         }
 
+        //Writre right --> left
         int i = booleans.size() - 1;
         for (Boolean b : booleans) {
             System.out.print(b + " ");
@@ -96,7 +82,6 @@ public class WriteTaskS7 {
     public void WriteInt(int p, int v) {
         S7.SetWordAt(motCommande, p, v);
         try {
-
             Thread.sleep(500);
         } catch (InterruptedException e) {
             e.printStackTrace();

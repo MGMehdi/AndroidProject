@@ -3,22 +3,18 @@ package com.siemens.process;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
-import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.GridLayout;
-import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.siemens.ListActivity;
 import com.siemens.R;
 import com.siemens.Simatic_S7.ReadTaskS7;
 import com.siemens.Simatic_S7.WriteTaskS7;
@@ -30,14 +26,11 @@ public class LevelControlActivity extends AppCompatActivity implements View.OnCl
 
     private ReadTaskS7 readTaskS7;
     private WriteTaskS7 writeTaskS7;
-    private LinearLayout linearSend;
     private User user;
+    private ArrayList<TextView> tvs = new ArrayList<>();
 
     private GridLayout gridWrite;
-
     private RadioButton rb1, rb2, rb3, rb4, rb5, rb6;
-
-    private ArrayList<TextView> tvs = new ArrayList<>();
     private TextView tv_title, tv_manaut, tv_man, tv_setpoint, tv_level, tv_output;
     private Button send, connect;
     private EditText writeValue;
@@ -46,12 +39,10 @@ public class LevelControlActivity extends AppCompatActivity implements View.OnCl
     private SharedPreferences preferences = null;
     private String _ip, _rack, _slot;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_level_control);
-
         try {
             this.preferences = getSharedPreferences("level_control", MODE_PRIVATE);
             this._ip = this.preferences.getString("IP", "");
@@ -72,17 +63,12 @@ public class LevelControlActivity extends AppCompatActivity implements View.OnCl
                             }
                         }).show();
             }
-
-        } catch (Exception e) {
-        }
-
+        } catch (Exception e) {}
 
         Bundle userDetail = this.getIntent().getExtras();
         this.user = (User) userDetail.getSerializable("user");
 
         this.gridWrite = findViewById(R.id.gridWrite);
-        this.linearSend = findViewById(R.id.linearSend);
-
 
         this.tv_title = findViewById(R.id.tv_l_title);
         this.tv_manaut = findViewById(R.id.tv_l_manaut);
@@ -98,6 +84,11 @@ public class LevelControlActivity extends AppCompatActivity implements View.OnCl
         this.tvs.add(tv_setpoint);
         this.tvs.add(tv_level);
 
+        this.send = findViewById(R.id.bt_send);
+        this.send.setOnClickListener(this);
+        this.connect = findViewById(R.id.bt_connect);
+        this.connect.setOnClickListener(this);
+
         this.writeValue = findViewById(R.id.et_writeValue);
 
         this.rb1 = findViewById(R.id.radio1);
@@ -107,7 +98,6 @@ public class LevelControlActivity extends AppCompatActivity implements View.OnCl
         this.rb5 = findViewById(R.id.radio5);
         this.rb6 = findViewById(R.id.radio6);
 
-
         radioButtons.add(rb1);
         radioButtons.add(rb2);
         radioButtons.add(rb3);
@@ -115,13 +105,7 @@ public class LevelControlActivity extends AppCompatActivity implements View.OnCl
         radioButtons.add(rb5);
         radioButtons.add(rb6);
 
-        this.send = findViewById(R.id.bt_send);
-        this.send.setOnClickListener(this);
-        this.connect = findViewById(R.id.bt_connect);
-        this.connect.setOnClickListener(this);
-
         writeTaskS7 = new WriteTaskS7();
-
     }
 
     @Override
@@ -133,7 +117,6 @@ public class LevelControlActivity extends AppCompatActivity implements View.OnCl
             writeTaskS7.Stop();
             finish();
         }
-
     }
 
     @SuppressLint("SetTextI18n")
@@ -153,8 +136,6 @@ public class LevelControlActivity extends AppCompatActivity implements View.OnCl
                     }
                     readTaskS7 = new ReadTaskS7(v, tvs);
                     readTaskS7.Start(this._ip, this._rack, this._slot);
-
-
                 } else {
                     this.connect.setText("CONNECT");
                     this.writeValue.setText(null);
@@ -183,7 +164,6 @@ public class LevelControlActivity extends AppCompatActivity implements View.OnCl
                     Toast.makeText(this, "Choose a DDB", Toast.LENGTH_SHORT).show();
                 } else if (checked){
                     int value = Integer.parseInt(this.writeValue.getText().toString());
-                    writeTaskS7 = new WriteTaskS7();
                     writeTaskS7.Start(this._ip, this._rack, this._slot);
                     if (rb1.isChecked()) writeTaskS7.WriteByte(2, value);
                     else if (rb2.isChecked()) writeTaskS7.WriteByte(3, value);
@@ -191,19 +171,9 @@ public class LevelControlActivity extends AppCompatActivity implements View.OnCl
                     else if (rb4.isChecked()) writeTaskS7.WriteInt(26, value);
                     else if (rb5.isChecked()) writeTaskS7.WriteInt(28, value);
                     else if (rb6.isChecked()) writeTaskS7.WriteInt(30, value);
-
-//                    try {
-//                        Thread.sleep(1000);
-//                    } catch (Exception e) {
-//                    }
                 }
         }
-
-
-
         writeTaskS7.Stop();
-
-
     }
 
 

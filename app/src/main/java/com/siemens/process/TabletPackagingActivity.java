@@ -1,8 +1,5 @@
 package com.siemens.process;
 
-import androidx.appcompat.app.AppCompatActivity;
-
-import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
@@ -11,11 +8,10 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.GridLayout;
-import android.widget.LinearLayout;
 import android.widget.RadioButton;
-import android.widget.RadioGroup;
 import android.widget.TextView;
-import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.siemens.R;
 import com.siemens.Simatic_S7.ReadTaskS7;
@@ -32,13 +28,12 @@ public class TabletPackagingActivity extends AppCompatActivity implements View.O
 
     private GridLayout gridWrite;
     private TextView tv_title, tv_bottles, tv_pill, tv_operation, tv_motor;
-    private LinearLayout linearSend;
     private ArrayList<TextView> tvs = new ArrayList<>();
     private ArrayList<RadioButton> radioButtons = new ArrayList<>();
-    private RadioGroup radioGroup;
     private RadioButton rb1, rb2, rb3, rb4, rb5;
     private EditText writeValue;
     private Button connect, send;
+
     private SharedPreferences preferences = null;
     private String _ip, _rack, _slot;
 
@@ -77,13 +72,13 @@ public class TabletPackagingActivity extends AppCompatActivity implements View.O
         this.user = (User) userDetail.getSerializable("user");
 
         this.gridWrite = findViewById(R.id.gridWrite);
-        this.linearSend = findViewById(R.id.linearSend);
 
         this.tv_title = findViewById(R.id.tv_tl_title);
         this.tv_bottles = findViewById(R.id.tv_tp_bottles);
         this.tv_pill = findViewById(R.id.tv_tp_pilldemand);
         this.tv_operation = findViewById(R.id.tv_tp_inoperation);
         this.tv_motor = findViewById(R.id.tv_tp_bandmotor);
+        this.writeValue = findViewById(R.id.et_writeValue);
 
         this.rb1 = findViewById(R.id.radio1);
         this.rb2 = findViewById(R.id.radio2);
@@ -103,17 +98,12 @@ public class TabletPackagingActivity extends AppCompatActivity implements View.O
         radioButtons.add(rb4);
         radioButtons.add(rb5);
 
-        this.radioGroup = findViewById(R.id.radioGroup);
-
         this.connect = findViewById(R.id.bt_connect);
         this.connect.setOnClickListener(this);
         this.send = findViewById(R.id.bt_send);
         this.send.setOnClickListener(this);
 
-        this.writeValue = findViewById(R.id.et_writeValue);
-
         writeTaskS7 = new WriteTaskS7();
-
     }
 
     @Override
@@ -127,7 +117,6 @@ public class TabletPackagingActivity extends AppCompatActivity implements View.O
         }
     }
 
-    @SuppressLint("SetTextI18n")
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
@@ -139,7 +128,7 @@ public class TabletPackagingActivity extends AppCompatActivity implements View.O
                         e.printStackTrace();
                     }
                     this.connect.setText("DISCONNECT");
-                    if (this.user.get_privilege()==1){
+                    if (this.user.get_privilege() == 1) {
                         gridWrite.setVisibility(View.VISIBLE);
                     }
                     readTaskS7 = new ReadTaskS7(v, tvs);
@@ -166,16 +155,12 @@ public class TabletPackagingActivity extends AppCompatActivity implements View.O
                 else if (rb4.isChecked()) writeTaskS7.WriteByte(8, value);
                 else if (rb5.isChecked()) writeTaskS7.WriteInt(18, value);
 
-
                 try {
                     Thread.sleep(1000);
                 } catch (Exception e) {
                 }
                 writeTaskS7.Stop();
             default:
-
         }
-
     }
-
 }

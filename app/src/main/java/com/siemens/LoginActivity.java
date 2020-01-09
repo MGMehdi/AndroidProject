@@ -1,8 +1,5 @@
 package com.siemens;
 
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -13,6 +10,9 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.siemens.database.DatabaseHelper;
 import com.siemens.database.User;
 
@@ -22,7 +22,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private Button _btnLogin;
     private DatabaseHelper _db = new DatabaseHelper(this);
     private User user;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,19 +35,14 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         this._btnLogin = findViewById(R.id.btn_login);
         this._btnLogin.setOnClickListener(this);
 
-        SharedPreferences preferences = null;
-        preferences = getSharedPreferences("firstStart", MODE_PRIVATE);
-        boolean firstStart = preferences.getBoolean("isFirstStart", true);
+        Toast.makeText(this, "User " + this._db.getAllUser().getCount(), Toast.LENGTH_SHORT).show();
 
-
-        if (firstStart) {
-            preferences.edit().putBoolean("isFirstStart", false).apply();
+        if (this._db.getAllUser().getCount() == 0) {
             FirstStart();
         }
     }
 
     public void FirstStart() {
-
         new AlertDialog.Builder(this)
                 .setTitle("Welcome")
                 .setMessage("This is the first time you launch this application. You must first create an administrator account.")
@@ -63,14 +57,12 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                     }
                 })
                 .setCancelable(false)
-
                 .create().show();
     }
 
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-
             case R.id.btn_login:
                 if (this._etLogin.getText().toString().isEmpty()) {
                     Toast.makeText(this, "Please enter a mail address", Toast.LENGTH_SHORT).show();
@@ -96,14 +88,11 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                                 Toast.makeText(this, "Wrong password", Toast.LENGTH_SHORT).show();
                             }
                         }
-                        }catch(Exception e){
-                            Toast.makeText(this, "User not found", Toast.LENGTH_SHORT).show();
-
-                        }
-
+                    } catch (Exception e) {
+                        Toast.makeText(this, "User not found", Toast.LENGTH_SHORT).show();
+                    }
                 }
                 break;
-
         }
     }
 }

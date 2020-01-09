@@ -1,9 +1,5 @@
 package com.siemens;
 
-import androidx.appcompat.app.AppCompatActivity;
-
-import android.app.AlertDialog;
-import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
@@ -12,13 +8,14 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
-import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.siemens.database.DatabaseHelper;
 
 import java.util.ArrayList;
 
-public class ListActivity extends AppCompatActivity implements  AdapterView.OnItemClickListener, View.OnClickListener {
+public class ListActivity extends AppCompatActivity implements AdapterView.OnItemClickListener, View.OnClickListener {
 
     private DatabaseHelper db = new DatabaseHelper(this);
 
@@ -42,6 +39,7 @@ public class ListActivity extends AppCompatActivity implements  AdapterView.OnIt
 
         listAllUser();
     }
+
     /************************************************************************************************************/
 
     public void listAllUser() {
@@ -54,6 +52,7 @@ public class ListActivity extends AppCompatActivity implements  AdapterView.OnIt
         this.adapter = new ArrayAdapter<>(this, R.layout.row, listItem);
         this.userList.setAdapter(adapter);
     }
+
     /************************************************************************************************************/
 
     // When item in the list is clicked
@@ -67,11 +66,12 @@ public class ListActivity extends AppCompatActivity implements  AdapterView.OnIt
         startActivity(userDetail);
         finish();
     }
+
     /************************************************************************************************************/
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()){
+        switch (v.getId()) {
             case R.id.btn_new_user:
                 Intent newUser = new Intent(this, InscriptionActivity.class);
                 startActivity(newUser);

@@ -17,8 +17,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String COLUMN_PASSWORD = "password";
     public static final String COLUMN_PRIVILEGE = "privilege";
 
-
-
     public DatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, 1);
     }
@@ -56,7 +54,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public void updateUser(User user) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
-        //contentValues.put(COLUMN_MAIL, user.get_mail());
         contentValues.put(COLUMN_NAME, user.get_name());
         contentValues.put(COLUMN_SURNAME, user.get_surname());
         contentValues.put(COLUMN_PRIVILEGE, user.get_privilege());
@@ -66,15 +63,13 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public void updatePassword (User user, String _userMail) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
-
         contentValues.put(COLUMN_PASSWORD, user.get_password());
         db.update(TABLE_NAME, contentValues, COLUMN_MAIL + " = " + "'" + _userMail + "'", null);
-
     }
 
-    public void deleteUser (String mail) {
+    public void deleteUser (User user) {
         SQLiteDatabase db = this.getWritableDatabase();
-        db.delete(TABLE_NAME, COLUMN_MAIL + " = " + "'" + mail + "'", null);
+        db.delete(TABLE_NAME, COLUMN_MAIL + " = " + "'" + user.get_mail() + "'", null);
     }
 
     public Cursor getAllUser() {
