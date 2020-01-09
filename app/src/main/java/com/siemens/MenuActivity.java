@@ -51,8 +51,6 @@ public class MenuActivity extends AppCompatActivity implements View.OnClickListe
         Bundle userDetail = this.getIntent().getExtras();
         this.user = (User) userDetail.getSerializable("user");
 
-        this._tv_welcome.setText("Welcome " + this.user.get_name() + " " + this.user.get_surname());
-
         if (this.user.get_privilege() == 1) {
             findViewById(R.id.view_management).setVisibility(View.VISIBLE);
             this._btn_management.setVisibility(View.VISIBLE);
