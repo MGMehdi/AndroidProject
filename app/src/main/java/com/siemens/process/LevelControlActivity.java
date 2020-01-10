@@ -114,7 +114,6 @@ public class LevelControlActivity extends AppCompatActivity implements View.OnCl
             finish();
         } else {
             readTaskS7.Stop();
-            writeTaskS7.Stop();
             finish();
         }
     }

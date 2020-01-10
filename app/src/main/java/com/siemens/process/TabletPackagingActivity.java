@@ -112,7 +112,6 @@ public class TabletPackagingActivity extends AppCompatActivity implements View.O
             finish();
         } else {
             readTaskS7.Stop();
-            writeTaskS7.Stop();
             finish();
         }
     }
