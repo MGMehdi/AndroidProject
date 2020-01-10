@@ -21,21 +21,15 @@ import com.siemens.process.TabletPackagingActivity;
 
 public class MenuActivity extends AppCompatActivity implements View.OnClickListener, View.OnLongClickListener {
 
-    private TextView _tv_welcome;
     private Button _btn_tablet_packaging, _btn_level_control, _btn_logout, _btn_management;
     private User user;
     private Intent settings;
-    private APISettingActivity _apiSettings;
-    private ConnectivityManager connexStatus;
-    private NetworkInfo network;
-    private WriteTaskS7 writeS7;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_menu);
 
-        this._tv_welcome = findViewById(R.id.tv_welcome);
         this._btn_tablet_packaging = findViewById(R.id.btn_tablet_packaging);
         this._btn_level_control = findViewById(R.id.btn_level_control);
         this._btn_management = findViewById(R.id.btn_management);
